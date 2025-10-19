@@ -1,0 +1,64 @@
+🚀 איך להריץ את אפליקציית TOVALI Marketplace
+================================================
+
+📱 להרצה על הטלפון (עם QR Code):
+1. לחץ כפול על: start-app.bat
+2. חכה שהשרת יתחיל
+3. תראה QR code בחלון השחור
+4. הורד אפליקציית "Expo Go" לטלפון:
+   - Android: https://play.google.com/store/apps/details?id=host.exp.exponent
+   - iPhone: https://apps.apple.com/app/expo-go/id982107779
+5. פתח את Expo Go וסרוק את הQR code
+6. האפליקציה תיפתח בטלפון!
+
+🌐 להרצה בדפדפן:
+1. לחץ כפול על: start-web.bat
+2. חכה שהשרת יתחיל
+3. הדפדפן יפתח אוטומטית
+4. אם לא, גש ל: http://localhost:19006
+
+⚠️ אם הקבצים לא עובדים:
+1. פתח PowerShell או Command Prompt
+2. הקלד: cd "C:\Users\Admin\Desktop\ירום\TOVALI\cursor newish\tovali-marketplace"
+3. הקלד: npm start (לטלפון) או npm run web (לדפדפן)
+
+📞 צריך עזרה? תגיד לי מה קורה!
+
+## 🚀 **עכשיו תוכל להפעיל את האפליקציה:**
+
+**בטרמינל שלך, הקלד:**
+```cmd
+npm run web
+```
+
+או אלטרנטיבה פשוטה יותר - **לחץ כפול על הקובץ:**
+```
+<code_block_to_apply_changes_from>
+```
+
+## 🎯 **מה צריך לקרות:**
+
+1. **השרת יתחיל** ותראה הודעות כמו:
+   ```
+   Starting Metro Bundler...
+   Web bundler is ready at http://localhost:19006
+   ```
+
+2. **הדפדפן ייפתח אוטומטיה** ב-`http://localhost:19006`
+
+3. **תראה את האפליקציה** עם:
+   - לוגו TOVALI במרכז
+   - כפתורי ניווט 
+   - קטגוריות ושירותים
+
+## 🔧 **אם זה לא עובד:**
+
+נסה את הפקודות האלה בטרמינל:
+```cmd
+npm install
+npm run web
+```
+
+**נסה עכשיו להפעיל ותגיד לי מה קורה! 🚀**
+
+
