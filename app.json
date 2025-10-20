@@ -27,6 +27,9 @@
       "favicon": "./assets/favicon.png",
       "bundler": "metro"
     },
-    "scheme": "tovali-marketplace"
+    "scheme": "tovali-marketplace",
+    "plugins": [
+      "expo-web-browser"
+    ]
   }
 }
