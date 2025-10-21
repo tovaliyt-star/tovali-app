@@ -13,6 +13,7 @@ import { StackScreenProps } from '@react-navigation/stack';
 import { RootStackParamList } from '../navigation/AppNavigator';
 import { useUserData } from '../context/UserDataContext';
 import { useUserMode } from '../context/UserModeContext';
+import { supabase } from '../lib/supabase';
 
 type Props = StackScreenProps<RootStackParamList, 'Login'>;
 
@@ -34,28 +35,42 @@ export default function LoginScreen({ navigation }: Props) {
     setLoading(true);
     
     try {
-      // טעינת נתוני המשתמש
+      // BEGIN: Supabase Auth integration
+      const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (authError) {
+        throw authError;
+      }
+
+      if (!authData.user) {
+        throw new Error('Login failed');
+      }
+
+      // Extract user metadata
+      const userType = authData.user.user_metadata?.user_type || 'customer';
+      // END: Supabase Auth integration
+
+      // טעינת נתוני המשתמש המקומיים (לסנכרון)
       await loadUserData();
       
-      // בדיקה אם המשתמש קיים וסיסמתו נכונה
-      if (userData && userData.email === email && userData.password === password) {
-        // הגדרת מצב המשתמש
-        await setUserMode(userData.userType);
-        
-        setLoading(false);
-        Alert.alert('הצלחה', 'התחברת בהצלחה!', [
-          {
-            text: 'אישור',
-            onPress: () => navigation.navigate('Main' as any),
-          },
-        ]);
-      } else {
-        setLoading(false);
-        Alert.alert('שגיאה', 'אימייל או סיסמה שגויים');
-      }
-    } catch (error) {
+      // הגדרת מצב המשתמש
+      await setUserMode(userType);
+      
       setLoading(false);
-      Alert.alert('שגיאה', 'אירעה שגיאה בהתחברות. אנא נסה שוב.');
+      Alert.alert('הצלחה', 'התחברת בהצלחה!', [
+        {
+          text: 'אישור',
+          onPress: () => navigation.navigate('Main' as any),
+        },
+      ]);
+    } catch (error: any) {
+      setLoading(false);
+      const errorMessage = error.message || 'אירעה שגיאה בהתחברות. אנא נסה שוב.';
+      Alert.alert('שגיאה', errorMessage);
+      console.error('Login error:', error);
     }
   };
 

@@ -16,6 +16,7 @@ import { RootStackParamList } from '../navigation/AppNavigator';
 import { useUserData } from '../context/UserDataContext';
 import { useUserMode } from '../context/UserModeContext';
 import * as ImagePicker from 'expo-image-picker';
+import { supabase } from '../lib/supabase';
 
 type Props = StackScreenProps<RootStackParamList, 'Register'>;
 
@@ -64,12 +65,33 @@ export default function RegisterScreen({ navigation }: Props) {
     setLoading(true);
     
     try {
+      // BEGIN: Supabase Auth integration
+      const { data: authData, error: authError } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            name,
+            phone,
+            user_type: userType,
+          },
+        },
+      });
+      if (authError) {
+        throw authError;
+      }
+      const userId = authData?.user?.id;
+      if (!userId) {
+        throw new Error('User creation failed');
+      }
+      // END: Supabase Auth integration
+
       // יצירת משתמש חדש
       await createNewUser({
         name,
         email,
         phone,
-        password,
+        password: '',
         userType,
         avatar: '',
         address: '',
@@ -91,9 +113,9 @@ export default function RegisterScreen({ navigation }: Props) {
           onPress: () => navigation.navigate('Main' as any),
         },
       ]);
-    } catch (error) {
+    } catch (error: any) {
       setLoading(false);
-      Alert.alert('שגיאה', 'אירעה שגיאה בהרשמה. אנא נסה שוב.');
+      Alert.alert('שגיאה', error.message || 'אירעה שגיאה בהרשמה. אנא נסה שוב.');
     }
   };
 
