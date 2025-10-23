@@ -1,15 +1,16 @@
 import { supabase } from './supabase';
+import type { Session } from '@supabase/supabase-js';
 
-export async function getInitialSession() {
-  const { data: { session }, error } = await supabase.auth.getSession();
-  if (error) console.warn('getSession error:', error.message);
-  return session ?? null;
+export function subscribeAuth(onChange?: (s: Session | null) => void) {
+  const { data: sub } = supabase.auth.onAuthStateChange((_event, session) => {
+    console.log('🔐 Auth state changed. Session?', !!session);
+    if (onChange) onChange(session);
+  });
+  return () => { sub.subscription.unsubscribe(); };
 }
 
-export function subscribeAuth(callback: (session: any) => void) {
-  const { data: subscription } = supabase.auth.onAuthStateChange((_event, session) => {
-    callback(session);
-  });
-  return () => subscription.subscription.unsubscribe();
+export async function getInitialSession() {
+  const { data } = await supabase.auth.getSession();
+  return data.session ?? null;
 }
 
